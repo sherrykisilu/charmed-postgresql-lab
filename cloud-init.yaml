@@ -1,0 +1,23 @@
+#cloud-config
+# Provisions the lab VM: Kubernetes (MicroK8s), Juju, LXD and charmcraft.
+# Used with: multipass launch 24.04 --name lab --cpus 4 --memory 12G --disk 60G --cloud-init cloud-init.yaml
+package_update: true
+packages:
+  - git
+  - jq
+  - python3-venv
+  - python3-pip
+  - postgresql-client
+
+runcmd:
+  - snap install microk8s --channel=1.32-strict/stable
+  - usermod -a -G snap_microk8s ubuntu
+  - microk8s status --wait-ready
+  - microk8s enable dns hostpath-storage
+  - snap alias microk8s.kubectl kubectl
+  - snap install juju --channel=3.6/stable
+  - snap install charmcraft --classic
+  - snap install lxd || true
+  - lxd init --auto
+  - usermod -a -G lxd ubuntu
+  - touch /home/ubuntu/LAB_READY

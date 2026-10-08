@@ -1,0 +1,7 @@
+# Never commit credentials or local connection strings
+.pglab
+*.env
+.env*
+
+# Personal planning notes (not for publishing)
+rocks-track.md
